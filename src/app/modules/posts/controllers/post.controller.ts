@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Query,
   Post,
   Body,
   Put,
@@ -9,16 +8,20 @@ import {
   Delete,
 } from '@nestjs/common';
 
+import { PostsService } from '../services/post.service';
+
 @Controller('posts')
 export class PostsController {
+  constructor(private postsService: PostsService) {}
+
   @Post()
   create(@Body() createCatDto) {
     return 'This action adds a new cat';
   }
 
   @Get()
-  findAll(@Query() query) {
-    return `This action returns all cats (limit: ${query.limit} items)`;
+  async findAll() {
+    return this.postsService.getAllPosts();
   }
 
   @Get(':id')
