@@ -9,14 +9,17 @@ import {
 } from '@nestjs/common';
 
 import { PostsService } from '../services/post.service';
+import { PostDto } from '../DTO/post';
 
 @Controller('posts')
 export class PostsController {
   constructor(private postsService: PostsService) {}
 
   @Post()
-  create(@Body() createCatDto) {
-    return 'This action adds a new cat';
+  create(@Body() post: PostDto) {
+    const { body, title, user_id } = post;
+
+    return this.postsService.createPost(body, title, user_id);
   }
 
   @Get()
@@ -26,16 +29,6 @@ export class PostsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `This action returns a #${id} cat`;
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateCatDto) {
-    return `This action updates a #${id} cat`;
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return `This action removes a #${id} cat`;
+    return this.postsService.getPostById(parseInt(id));
   }
 }
