@@ -26,6 +26,6 @@ export class PostsController {
 
   @All()
   async handleInvalidRequests() {
-    return 'This resource could not be found.';
+    return 'Error. This resource could not be found.';
   }
 }
