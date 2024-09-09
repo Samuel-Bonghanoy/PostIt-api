@@ -6,61 +6,40 @@ export class CommentsService {
   constructor(private readonly supabase: Supabase) {}
   private readonly cats = [];
 
-  async getAllPosts() {
-    const posts = await this.supabase
+  async getPostComments(post_id: number) {
+    const comments = await this.supabase
       .getClient()
-      .from('posts')
+      .from('comments')
       .select(
-        `
-      id, 
-      title, 
+        `  
       body,
       created_at,
       users ( id, username, profile_pic_url )
     `,
       )
+      .eq('post_id', post_id)
       .order('id', { ascending: false });
 
-    return posts;
+    return comments;
   }
 
-  async getPostById(post_id: number) {
-    const post = await this.supabase
-      .getClient()
-      .from('posts')
-      .select(
-        `
-      id, 
-      title, 
-      body,
-      created_at,
-      users ( id, username, profile_pic_url )
-    `,
-      )
-      .eq('id', post_id)
-      .order('id', { ascending: false });
-
-    return post;
-  }
-
-  async createPost(body: string, title: string, user_id: number) {
+  async createComment(body: string, poster_id: number, post_id: number) {
     await this.supabase
       .getClient()
-      .from('posts')
-      .insert([{ body, title, user_id }]);
+      .from('comments')
+      .insert([{ body, poster_id, post_id }]);
 
     return await this.supabase
       .getClient()
-      .from('posts')
+      .from('comments')
       .select(
-        `
-    id, 
-    title, 
-    body,
-    created_at,
-    users ( id, username, profile_pic_url )
-  `,
+        `  
+      body,
+      created_at,
+      users ( id, username, profile_pic_url )
+      `,
       )
+      .eq('post_id', post_id)
       .order('id', { ascending: false });
   }
 }
