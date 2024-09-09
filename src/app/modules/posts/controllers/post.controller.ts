@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, All } from '@nestjs/common';
 
 import { PostsService } from '../services/post.service';
 import { PostDto } from '../DTO/post';
@@ -22,5 +22,10 @@ export class PostsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postsService.getPostById(parseInt(id));
+  }
+
+  @All()
+  async handleInvalidRequests() {
+    return 'This resource could not be found.';
   }
 }
